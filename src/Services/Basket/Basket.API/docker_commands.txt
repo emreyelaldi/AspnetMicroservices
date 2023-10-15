@@ -27,50 +27,6 @@ get name
 
 docker run -d -p 6379:6379 --name aspnetrun-redis redis		>> container ayağa kaldırır.
 
-docker logs -f shopping-mongo								>> logları gösterir.
-
-docker exec -it shopping-mongo mongosh						>> container içinde terminal oluşturur.Erişim sağlar
-
-docker ps													>> aktif container'ları listeler
-
--d		>> detach
--it		>> interactive terminal
--p		>> port
--f		>> file
-
-Mongo CLI (Linux Container)
-
-ls									>> listele
-show dbs							>> db leri göster
-use CatalogDb						>> CatalogDb oluştur
-db.createCollection('Products')		>> Products collection oluştur
-
-db.Products.insertMany(
-			[
-			    {
-			        "Name": "Asus Laptop",
-			        "Category": "Computers",
-			        "Summary": "Summary",
-			        "Description": "Description",
-			        "ImageFile": "ImageFile",
-			        "Price": 54.93
-			    },
-			    {
-			        "Name": "HP Laptop",
-			        "Category": "Computers",
-			        "Summary": "Summary",
-			        "Description": "Description",
-			        "ImageFile": "ImageFile",
-			        "Price": 88.93d
-			    }
-			])
-
-db.Products.find({}).pretty()	>> filtre olmadan hepsini getir
-db.Products.remove({})			>> eski versionunda kalmış. hepsini sil.
-show databases
-show collections
-
-
 Close all dockers and run with below command on that location;
 
 	docker-compose -f docker-compose.yml -f docker-compose.override.yml up --build
