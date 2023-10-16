@@ -1,37 +1,34 @@
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Ordering.API.Extensions;
-using Ordering.Application;
-using Ordering.Infrastructure;
 using Ordering.Infrastructure.Persistence;
 
-var builder = WebApplication.CreateBuilder(args);
-
-builder.Services.AddApplicationServices();//custom
-builder.Services.AddInfrastructureServices(builder.Configuration);//custom
-
-builder.Services.AddControllers();
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-
-var app = builder.Build();
-
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+namespace Ordering.API
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    public class Program
+    {
+        public static void Main(string[] args)
+        {
+            CreateHostBuilder(args)
+                .Build()
+                .MigrateDatabase<OrderContext>((context, services) =>
+                    {
+                        var logger = services.GetService<ILogger<OrderContextSeed>>();
+                        OrderContextSeed
+                            .SeedAsync(context, logger)
+                            .Wait();
+                    })
+                .Run();
+        }
+
+        public static IHostBuilder CreateHostBuilder(string[] args) =>
+            Host.CreateDefaultBuilder(args)
+                //.UseSerilog(SeriLogger.Configure)
+                .ConfigureWebHostDefaults(webBuilder =>
+                {
+                    webBuilder.UseStartup<Startup>();
+                });
+    }
 }
-
-app.UseAuthorization();
-
-app.MapControllers();
-
-//custom
-app.MigrateDatabase<OrderContext>((context, services) =>
-{
-    var logger = services.GetService<ILogger<OrderContextSeed>>();
-    OrderContextSeed
-        .SeedAsync(context, logger)
-        .Wait();
-});
-
-app.Run();
