@@ -10,11 +10,11 @@ namespace Catalog.API.Data
             bool existProduct = productCollection.Find(p => true).Any();
             if (!existProduct)
             {
-                productCollection.InsertManyAsync(GetProducts());
+                productCollection.InsertManyAsync(GetData());
             }
         }
 
-        private static IEnumerable<Product> GetProducts()
+        private static IEnumerable<Product> GetData()
         {
             return new List<Product>()
             {
