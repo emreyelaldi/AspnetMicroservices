@@ -15,7 +15,7 @@ ping >> Cevap olarak PONG döner
 
 set key EMREY
 get key
-set name mehmet
+set name Ahmet
 get name
 
 
