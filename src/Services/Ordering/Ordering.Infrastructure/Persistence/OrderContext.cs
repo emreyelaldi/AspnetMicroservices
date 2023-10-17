@@ -15,6 +15,13 @@ namespace Ordering.Infrastructure.Persistence
 
         public DbSet<Order> Orders { get; set; }
 
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            optionsBuilder.UseSqlServer("Server=localhost,1444;Database=OrderDb;User Id=sa;Password=SEN12345678;TrustServerCertificate=True");
+
+            //base.OnConfiguring(optionsBuilder);
+        }
+
         public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
         {
             foreach (var entry in ChangeTracker.Entries<EntityBase>())

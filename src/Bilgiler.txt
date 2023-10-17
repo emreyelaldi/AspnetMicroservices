@@ -1,0 +1,97 @@
+﻿************************************************************************************************************
+
+EFCore > CodeFirst 
+add-migration mig1 migration'ları oluşturma
+update-database db'yi ayağa kaldırma.
+
+************************************************************************************************************
+
+Docker > Genel
+
+docker ps     (aktif container'ları listeler)
+docker ps -a  (tüm container'ları listeler)
+
+docker-compose -f docker-compose.yml -f docker-compose.override.yml up -d	(Container'ları Ayağa Kaldır) 
+docker-compose -f docker-compose.yml -f docker-compose.override.yml down	(Container'ları Sil)
+
+Docker > MongoDb
+
+docker run -d -p 27017:27017 --name shopping-mongo mongo (container ayağa kaldırır)
+docker logs -f shopping-mongo	(logları gösterir)
+docker exec -it shopping-mongo mongosh	(container içinde terminal oluşturur.Erişim sağlar)
+
+Docker > Redis
+
+docker pull redis (image)
+docker run -d -p 6379:6379 --name aspnetrun-redis redis
+docker exec -it aspnetrun-redis /bin/bash >> Interactive Terminal
+docker run -d -p 6379:6379 --name aspnetrun-redis redis	(container ayağa kaldırır)
+
+
+************************************************************************************************************
+
+SORU  : Is unit of work pattern necessary?
+CEVAP : The Unit Of Work pattern is employed in scenarios where multiple repositories, 
+possibly using different data contexts, are involved. It allows tracking all changes 
+made within a transaction until the Commit method is invoked to persist those changes to the database.
+
+************************************************************************************************************
+
+SORU  : Eventual Consistency
+CEVAP : Bir veri, veri satırı olarak değil de, bu satırı oluşturacak event’lerin toplamı olarak ifade edilirse
+bize Eventual Consistency(Nihai Tutarlılık) bir yapı sunabilir.
+https://www.gencayyildiz.com/blog/event-sourcing-nedir-haydi-gelin-hep-beraber-inceleyelim/
+
+************************************************************************************************************ 
+
+SORU  : Mediator Pattern nedir?
+CEVAP : (Uçaklar - kule)
+Neden böyle bir tasarıma ihtiyaç duyarız? Hangi olası soruna çare arıyoruz?
+1- Nesnelerin birbiriyle doğrudan iletişime girmesi durumunda bir nesnenin iletişime girdiği diğer 
+nesneye bağlı olması(referans etmesi vs.) gereksinimini getirir. Bu sürecin zincirleme devam etmesi,
+tightly-coupled(sıkı-bağlı) bir tasarımın ortaya çıkması gibi istenmeyen fakat kaçınılmaz sonuçların 
+doğmasına neden olacaktır. 
+
+Mediator Pattern bu problemi nasıl çözmeyi öneriyor?
+1- Mediator Pattern yukarıda özetlemeye çalıştığım duruma çözüm olarak iletişimin merkezine bir aracı
+koyar ve tüm iletişim bunun üzerinden gerçekleşir. Böylece nesneler arası loosely-coupled(gevşek-bağlı)
+bir bağın kullanılmasına imkan tanır. Nesneler iletişim kurmak istediği diğer nesnelerin referanslarını 
+barındırmaz, doğrudan bağlantı kurmaz, aracıyı kullanarak tüm iletişimlerini bu aracı katman üzerinden
+sağlarlar.
+
+2- Temel amaç sistemdeki nesneler diğer nesnelere doğrudan bağlı olmak yerine bir aracı nesneye bağlı
+olsunlar ve iletişim bunun üzerinden sağlansın düşüncesidir.
+
+ÖRNEK (ChatRoom)
+https://github.com/enginunal/MediatorPatternChatroomSample
+
+************************************************************************************************************
+
+CQRS Ne Zaman Kullanılmalı ?
+1- Birbirinden ayrı sistemlerde olası bir servisin hata vermesi durumunda bu hatanın sistemin akışına olumsuz
+yönde etkisi olmuyorsa kullanılabilir.
+2- Kompleks iş kurallarının olabileceği veya iş kurallarının sık sık değiştiği yapılarda kullanılabilir.
+3- Yüksek veri trafiğinin olduğu sistemlerde kullanılabilir.
+
+CQRS’i Ne Zaman Kullanmamalıyız ?
+1- İş kurallarının basit ve çok değişmediği sistemlerde,
+2- Basit CRUD işlemlerinin yapıldığı sistemlerde
+
+CQRS’in Avantajları
+1- Read ve write operasyonlarının ayrılması performansı, ölçeklenebilirliği ve güvenliği artırmaya yardımcı 
+olabilir.
+2- Read ve write işlemleriniz için farklı veritabanları kullanabilirsiniz.(Örneğin, yazma işlemleri için 
+MySQL kullanırken okuma işlemleri için Couchbase kullanabilirsiniz).
+3- Read ve write işlemleri ayrıldığı için, herhangi yapılacak bir read işleminde write işlemini beklemek 
+zorunda kalmayız.
+4- Her ekibin farklı Domain Logic’i üzerinde çalışabileceği bir yapı kurulmasına yardımcı olabilir.
+
+CQRS’in Dezavantajları
+1- Kod karmaşıklığını arttırır.
+2- Event bazlı bir yapıya sahipseniz, uygulamanızın queue’da yer alan hataları ve tekrarlanan işlemleri 
+yönetebilmesi gerekmektedir. Olası failover senaryolarını düşünmediğinizde veri kaybı veya daha büyük sorunlarla
+karşılaşabilirsiniz.
+
+************************************************************************************************************
+
+SSS
